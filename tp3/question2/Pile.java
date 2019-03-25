@@ -15,8 +15,10 @@ public class Pile implements PileI {
     private int ptr;
 
     public Pile(int taille) {
-        // traiter le cas <=0
-        // a completer
+        if (taille <= 0)
+            taille = CAPACITE_PAR_DEFAUT;
+        this.zone = new Object[taille];
+        this.ptr = 0;
     }
 
     public Pile() {
@@ -24,51 +26,115 @@ public class Pile implements PileI {
     }
 
     public void empiler(Object o) throws PilePleineException {
-        // a completer
+            if (estPleine())
+            throw new PilePleineException();
+        this.zone[this.ptr] = o;
+        this.ptr++;
     }
 
     public Object depiler() throws PileVideException {
-        // a completer
-        return null;
+        if (estVide())
+            throw new PileVideException();
+        ptr--;
+        return zone[ptr];
     }
 
     public Object sommet() throws PileVideException {
-        // a completer
-        return null;
+        if (estVide())
+            throw new PileVideException();
+        return zone[ptr-1];
+       
     }
 
     public int capacite() {
-        // a completer
-        return -1;
+        return zone.length;
     }
 
     public int taille() {
-        // a completer
-        return -1;
+    return ptr;
     }
 
     public boolean estVide() {
-        // a completer
-        return false;
+       return ptr == 0;
     }
 
     public boolean estPleine() {
-        // a completer
-        return false;
+       return ptr == zone.length;
     }
-
-    public boolean equals(Object o) {
-        // a completer
-        return false;
+    
+    
+   
+     
+   public boolean equals(Object o){
+       // if (o instanceof PileI) { 
+      // PileI p = (PileI) o; 
+      // return this.capacite() == p.capacite() 
+          // && this.hashCode() == p.hashCode(); 
+    // } else 
+      // return false; 
+  // }
+        PileI p = (PileI)o;
+       
+        int capacite = this.capacite();
+        int taille = this.taille();
+        if(capacite != p.capacite())
+            return false;
+        if(taille != p.taille())
+            return false;
+        
+            if(! (o instanceof PileI))
+            return false;
+            
+        //(empty check):
+        if(taille == 0) return true;
+        
+        //element % element et prenant compte des sequences: 
+        Pile a = new Pile(taille);
+        Object b = new Object();
+        for(int i=taille-1; i>=0 ; i--){
+            try{
+                b = p.depiler();
+                a.empiler(b);
+            } catch(PileVideException pve){}
+            catch(PilePleineException ppe){}
+            if(!b.equals(zone[i])){
+                try{
+                    p.empiler(b);
+                } catch(PilePleineException ppe){}
+                ldPile(a, p);
+                return false;
+            }  
+        }
+        
+        ldPile(a, p);
+        
+        return true;
+        
     }
-
+  
     // fonction fournie
     public int hashCode() {
         return toString().hashCode();
     }
 
     public String toString() {
-        // a completer
-        return null;
+        StringBuffer sb = new StringBuffer("[");
+        for (int i = ptr - 1; i >= 0; i--) {
+            sb.append(zone[i].toString());
+            if (i > 0)
+                sb.append(", ");
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+        //method for loading back the structure:
+    private void ldPile(PileI a, PileI b){
+        int taillePile = a.taille();
+        for(int i=0; i<taillePile; i++){
+            try{
+                b.empiler(a.depiler());
+            } catch(PileVideException pve){}
+            catch(PilePleineException ppe){}
+        }
     }
 }

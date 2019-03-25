@@ -7,6 +7,7 @@ public interface PileI {
   
     public final static int CAPACITE_PAR_DEFAUT = 6;
     
+    
     public void empiler(Object o) throws PilePleineException;
     public Object depiler() throws PileVideException;
   
