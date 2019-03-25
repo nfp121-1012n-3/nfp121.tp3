@@ -12,26 +12,6 @@ public class Pile2 implements PileI {
     /** la capacite de la pile */
     private int capacite;
 
-    
- //creation d'un type stack qui accepte une taille:
-public class SizedStack<T> extends Stack<T> {
-    private int maxSize;
-
-    public SizedStack(int size) {
-        super();
-        this.maxSize = size;
-    }
-
-    @Override
-    public T push(T object) {
-        //If the stack is too big, remove elements until it's the right size.
-        while (this.size() >= maxSize) {
-            this.remove(0);
-        }
-        return super.push(object);
-    }
-}
-
     /**
      * Creation d'une pile.
      * 
@@ -42,7 +22,7 @@ public class SizedStack<T> extends Stack<T> {
         if (taille <= 0)
             taille = CAPACITE_PAR_DEFAUT;
         
-        this.stk = new SizedStack<Object>(taille);
+        this.stk = new Stack<Object>();
         this.capacite = taille;
     }
 
@@ -54,6 +34,7 @@ public class SizedStack<T> extends Stack<T> {
     public void empiler(Object o) throws PilePleineException {
         if(estPleine())throw new PilePleineException();
         stk.push(o);
+        
     }
 
     public Object depiler() throws PileVideException {
